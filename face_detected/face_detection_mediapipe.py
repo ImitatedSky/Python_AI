@@ -33,9 +33,9 @@ with mp_face_detection.FaceDetection(
           for detection in results.detections:
             mp_drawing.draw_detection(image, detection)
 
+        # cv2.imshow('detected', image)
         # Flip the image horizontally for a selfie-view display. 水平翻轉
-        # cv2.imshow('detected', cv2.flip(image, 1))
-        cv2.imshow('detected', image)
+        cv2.imshow('detected', cv2.flip(image, 1))
 
         if cv2.waitKey(1) & 0xFF == 27  or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
           break
