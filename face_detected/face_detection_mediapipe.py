@@ -27,7 +27,7 @@ with mp_face_detection.FaceDetection(
           continue
 
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        results = face_detection.process(image)
+        results = face_detection.process(image) # 偵測手掌
 
         if results.detections:
           for detection in results.detections:
