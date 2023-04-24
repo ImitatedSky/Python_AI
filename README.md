@@ -2,3 +2,5 @@
 opencv
 
 -face
+
+-eye
