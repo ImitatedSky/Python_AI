@@ -3,9 +3,9 @@ import cv2
 import os
 
 video_capture = cv2.VideoCapture(0)
-eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml') # 載入人臉模型
+eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml') # 載入眼睛模型
 
-# faces = face_cascade.detectMultiScale(gray)  # 偵測人臉
+# faces = face_cascade.detectMultiScale(gray)  # 偵測眼睛
 
 if not video_capture.isOpened():
     print("Cannot open camera")
@@ -18,10 +18,10 @@ while True:
         
     frame = cv2.resize(frame,(640,480))              # 縮小尺寸，避免尺寸過大導致效能不好
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)   # 將鏡頭影像轉換成灰階
-    faces = eye_cascade.detectMultiScale(gray)      # 偵測人臉
+    faces = eye_cascade.detectMultiScale(gray)      # 偵測眼睛
 
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)   # 標記人臉
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)   # 標記眼睛
     cv2.imshow('detected', frame)
     if cv2.waitKey(1) == 27 or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
         break
