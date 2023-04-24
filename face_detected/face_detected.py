@@ -23,7 +23,7 @@ while True:
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)   # 標記人臉
     cv2.imshow('detected', frame)
-    if cv2.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == 27 or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
         break
 
 video_capture.release()
