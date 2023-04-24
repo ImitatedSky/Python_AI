@@ -35,7 +35,7 @@ with mp_hands.Hands(
                     mp_drawing_styles.get_default_hand_connections_style())
 
         cv2.imshow('oxxostudio', img)
-        if cv2.waitKey(5) == ord('q'):
-            break    # 按下 q 鍵停止
+        if cv2.waitKey(1) == 27 or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
+            break   
 cap.release()
 cv2.destroyAllWindows()
