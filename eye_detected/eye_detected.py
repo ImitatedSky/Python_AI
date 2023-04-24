@@ -1,30 +1,46 @@
-import numpy as np
 import cv2
-import os
+import mediapipe as mp
 
-video_capture = cv2.VideoCapture(0)
-eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml') # 載入眼睛模型
+mp_drawing = mp.solutions.drawing_utils          # mediapipe 繪圖方法
+mp_hands = mp.solutions.hands                    # mediapipe 偵測手掌方法
+mp_drawing_styles = mp.solutions.drawing_styles  # mediapipe 繪圖樣式
 
-# faces = face_cascade.detectMultiScale(gray)  # 偵測眼睛
+cap = cv2.VideoCapture(0)
 
-if not video_capture.isOpened():
-    print("Cannot open camera")
-    exit()
-while (video_capture.isOpened()):
-    ret, frame = video_capture.read()
-    if not ret:
-        print("Cannot receive frame")
-        break
-        
-    frame = cv2.resize(frame,(640,480))              # 縮小尺寸，避免尺寸過大導致效能不好
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)   # 將鏡頭影像轉換成灰階
-    faces = eye_cascade.detectMultiScale(gray)      # 偵測眼睛
+# mediapipe 啟用偵測手掌
+with mp_hands.Hands(
+    model_complexity=0,
+    # max_num_hands=1,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5) as hands_detection:
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)   # 標記眼睛
-    cv2.imshow('detected', frame)
-    if cv2.waitKey(1) == 27 or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
-        break
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+    while True:
+        ret, img = cap.read()
+        if not ret:
+            print("Ignoring empty camera frame")
+            break
 
-video_capture.release()
+        img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)   # 將 BGR 轉換成 RGB
+        results = hands_detection.process(img2)                 # 偵測手掌
+
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                # 將節點和骨架繪製到影像中
+                mp_drawing.draw_landmarks(
+                    img,
+                    hand_landmarks,
+                    mp_hands.HAND_CONNECTIONS,
+                    mp_drawing_styles.get_default_hand_landmarks_style(),
+                    mp_drawing_styles.get_default_hand_connections_style())
+
+
+        # Flip the image horizontally for a selfie-view display. 水平翻轉
+        cv2.imshow('detected', cv2.flip(image, 1))
+
+        if cv2.waitKey(1) == 27 or cv2.getWindowProperty('detected', cv2.WND_PROP_VISIBLE) < 1:
+            break    
+cap.release()
 cv2.destroyAllWindows()
