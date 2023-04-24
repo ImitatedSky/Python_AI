@@ -10,7 +10,7 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades+"haarcascade_frontalf
 if not video_capture.isOpened():
     print("Cannot open camera")
     exit()
-while True:
+while (video_capture.isOpened()):
     ret, frame = video_capture.read()
     if not ret:
         print("Cannot receive frame")
