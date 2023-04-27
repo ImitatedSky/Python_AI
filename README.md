@@ -4,3 +4,9 @@ opencv
 -face
 
 -eye
+
+mediapipe
+
+-face
+
+-hand
